@@ -185,7 +185,7 @@ elif selected_page == pages[1]:
         """, unsafe_allow_html=True)
 
 # ============================================================
-# SLIDE 3: UV-Vis SPECTROSCOPY (ANIMATED)
+# SLIDE 3: UV-Vis SPECTROSCOPY (ANIMATED - FIXED)
 # ============================================================
 elif selected_page == pages[2]:
     st.markdown("<h1>2. Task A – Spectroscopy</h1>", unsafe_allow_html=True)
@@ -221,6 +221,9 @@ elif selected_page == pages[2]:
         if st.session_state.anim_conc > 10.0:
             st.session_state.anim_conc = 10.0
             st.session_state.anim_running = False
+        else:
+            time.sleep(0.05)
+            st.rerun()
 
     # Use slider if not animating, else use anim value
     if st.session_state.anim_running:
@@ -393,12 +396,12 @@ elif selected_page == pages[3]:
     
     with col2:
         st.markdown('<p style="color:#8899bb; font-size:0.9rem;">HPLC-UV chromatogram · Riboflavin @ ~5.2 min</p>', unsafe_allow_html=True)
-        time = np.linspace(0, 10, 200)
-        signal = 0.02 + 0.9 * np.exp(-((time - 5.2)**2) / 0.15) + 0.08 * np.exp(-((time - 3.5)**2) / 0.5) + 0.05 * np.exp(-((time - 7.0)**2) / 0.4)
+        time_vals = np.linspace(0, 10, 200)
+        signal = 0.02 + 0.9 * np.exp(-((time_vals - 5.2)**2) / 0.15) + 0.08 * np.exp(-((time_vals - 3.5)**2) / 0.5) + 0.05 * np.exp(-((time_vals - 7.0)**2) / 0.4)
         
         fig = go.Figure()
         fig.add_trace(go.Scatter(
-            x=time,
+            x=time_vals,
             y=signal,
             mode='lines',
             name='Chromatogram',
