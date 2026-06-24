@@ -222,9 +222,7 @@
 
     <div class="slides-wrapper" id="slidesWrapper">
 
-        <!-- ============================================================ -->
         <!-- SLIDE 1: TITLE -->
-        <!-- ============================================================ -->
         <section class="slide active" data-index="0">
             <div class="slide-content" style="text-align:center;">
                 <div style="font-size:4rem; margin-bottom:1rem;">🧬</div>
@@ -237,9 +235,7 @@
             </div>
         </section>
 
-        <!-- ============================================================ -->
         <!-- SLIDE 2: WHAT IS AMIDE FORMATION? -->
-        <!-- ============================================================ -->
         <section class="slide" data-index="1">
             <div class="slide-content">
                 <h1 class="slide-title">What is Amide Formation?</h1>
@@ -270,9 +266,7 @@
             </div>
         </section>
 
-        <!-- ============================================================ -->
         <!-- SLIDE 3: WHY AMIDES IN DRUGS? -->
-        <!-- ============================================================ -->
         <section class="slide" data-index="2">
             <div class="slide-content">
                 <h1 class="slide-title">Why Amides in Drugs?</h1>
@@ -297,9 +291,7 @@
             </div>
         </section>
 
-        <!-- ============================================================ -->
         <!-- SLIDE 4: REAL DRUG EXAMPLES -->
-        <!-- ============================================================ -->
         <section class="slide" data-index="3">
             <div class="slide-content">
                 <h1 class="slide-title">Real Drug Examples</h1>
@@ -324,9 +316,7 @@
             </div>
         </section>
 
-        <!-- ============================================================ -->
         <!-- SLIDE 5: MODERN APPLICATIONS -->
-        <!-- ============================================================ -->
         <section class="slide" data-index="4">
             <div class="slide-content">
                 <h1 class="slide-title">Modern Applications</h1>
@@ -358,9 +348,7 @@
             </div>
         </section>
 
-        <!-- ============================================================ -->
         <!-- SLIDE 6: CONCLUSION -->
-        <!-- ============================================================ -->
         <section class="slide" data-index="5">
             <div class="slide-content" style="text-align:center;">
                 <h1 class="slide-title">Conclusion</h1>
@@ -386,9 +374,7 @@
 
     </div>
 
-    <!-- ============================================================ -->
     <!-- NAVIGATION -->
-    <!-- ============================================================ -->
     <div class="nav-controls">
         <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
         <div class="nav-dots" id="navDots"></div>
@@ -396,9 +382,6 @@
         <button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
     </div>
 
-    <!-- ============================================================ -->
-    <!-- JAVASCRIPT -->
-    <!-- ============================================================ -->
     <script>
         // ============================================================
         // SLIDE NAVIGATION
@@ -427,7 +410,6 @@
             dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
             counter.textContent = (currentSlide + 1) + ' / ' + totalSlides;
             slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
-            // Re-render molecules after slide change (fixes rendering issues)
             setTimeout(renderMolecules, 100);
         }
 
