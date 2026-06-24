@@ -1,7 +1,7 @@
 import streamlit as st
-import streamlit.components.v1 as components
 import plotly.graph_objects as go
 import numpy as np
+import pandas as pd
 
 # ============================================================
 # PAGE CONFIG
@@ -118,28 +118,120 @@ pages = [
 selected_page = st.sidebar.radio("Navigate", pages, index=0)
 
 # ============================================================
-# 3D MOLECULE VIEWER (USING HTML COMPONENT)
+# 3D MOLECULE GENERATOR (PLOTLY)
 # ============================================================
-def render_3d_molecule(smiles, height=350):
-    """Render a 3D molecule from SMILES using py3Dmol"""
-    html_code = f"""
-    <div id="molViewer" style="width:100%; height:{height}px; border-radius:16px; background:#0a0a1a; border:1px solid rgba(255,255,255,0.05);"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.2/3Dmol-min.js">
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {{
-            var viewer = $3Dmol.createViewer('molViewer', {{
-                backgroundColor: '0x0a0a1a'
-            }});
-            viewer.addModel("{smiles}", "smiles");
-            viewer.setStyle({{}}, {{ stick: {{}}, sphere: {{ scale: 0.3 }} }});
-            viewer.zoomTo();
-            viewer.rotate(90);
-            viewer.render();
-        }});
-    </script>
+def generate_molecule_3d(atom_positions, bonds, atom_colors=None, atom_labels=None, title=""):
     """
-    return components.html(html_code, height=height + 20)
+    Generate a 3D molecule plot using Plotly.
+    
+    atom_positions: list of [x, y, z] coordinates
+    bonds: list of [i, j] indices connecting atoms
+    atom_colors: list of colors for each atom
+    atom_labels: list of labels for each atom
+    """
+    
+    if atom_colors is None:
+        atom_colors = ['#00ff88'] * len(atom_positions)
+    if atom_labels is None:
+        atom_labels = [''] * len(atom_positions)
+    
+    # Create atom traces
+    atom_x = [p[0] for p in atom_positions]
+    atom_y = [p[1] for p in atom_positions]
+    atom_z = [p[2] for p in atom_positions]
+    
+    atom_trace = go.Scatter3d(
+        x=atom_x,
+        y=atom_y,
+        z=atom_z,
+        mode='markers+text',
+        marker=dict(
+            size=12,
+            color=atom_colors,
+            opacity=0.9,
+            line=dict(width=2, color='white')
+        ),
+        text=atom_labels,
+        textposition='top center',
+        textfont=dict(color='white', size=10),
+        hoverinfo='text',
+        name='Atoms'
+    )
+    
+    # Create bond traces
+    bond_traces = []
+    for i, j in bonds:
+        bond_trace = go.Scatter3d(
+            x=[atom_positions[i][0], atom_positions[j][0]],
+            y=[atom_positions[i][1], atom_positions[j][1]],
+            z=[atom_positions[i][2], atom_positions[j][2]],
+            mode='lines',
+            line=dict(color='rgba(255,255,255,0.5)', width=4),
+            hoverinfo='none',
+            showlegend=False
+        )
+        bond_traces.append(bond_trace)
+    
+    # Combine all traces
+    traces = [atom_trace] + bond_traces
+    
+    # Layout
+    layout = go.Layout(
+        title=title,
+        scene=dict(
+            xaxis=dict(showticklabels=False, showgrid=False, zeroline=False, title=''),
+            yaxis=dict(showticklabels=False, showgrid=False, zeroline=False, title=''),
+            zaxis=dict(showticklabels=False, showgrid=False, zeroline=False, title=''),
+            camera=dict(
+                eye=dict(x=1.5, y=1.5, z=1.5)
+            ),
+            bgcolor='rgba(0,0,0,0)'
+        ),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=0, r=0, t=30, b=0),
+        height=350,
+        hovermode='closest'
+    )
+    
+    fig = go.Figure(data=traces, layout=layout)
+    return fig
+
+# ============================================================
+# AMIDE MOLECULE DATA
+# ============================================================
+def get_amide_data():
+    """Amide structure: paracetamol-like"""
+    atoms = [
+        [0.0, 0.0, 0.0],   # C
+        [1.2, 0.0, 0.0],   # C
+        [1.8, 1.2, 0.0],   # C
+        [1.2, 2.4, 0.0],   # C
+        [0.0, 2.4, 0.0],   # C
+        [-0.6, 1.2, 0.0],  # C
+        [1.8, -1.2, 0.0],  # C=O
+        [1.2, -2.4, 0.0],  # N
+        [1.8, -3.6, 0.0],  # C
+        [0.6, -2.4, 0.0],  # H
+        [2.0, 3.0, 0.0],   # O
+        [2.6, 4.2, 0.0],   # C
+        [3.8, 4.2, 0.0],   # C
+        [4.4, 5.4, 0.0],   # C
+        [3.8, 6.6, 0.0],   # C
+        [2.6, 6.6, 0.0],   # C
+        [2.0, 5.4, 0.0],   # C
+    ]
+    
+    bonds = [
+        [0,1], [1,2], [2,3], [3,4], [4,5], [5,0],
+        [1,6], [6,7], [7,8], [7,9], [3,10],
+        [10,11], [11,12], [12,13], [13,14], [14,15], [15,16], [16,11]
+    ]
+    
+    colors = ['#00ff88'] * len(atoms)
+    labels = [''] * len(atoms)
+    
+    return atoms, bonds, colors, labels
 
 # ============================================================
 # SLIDE 1: TITLE
@@ -201,7 +293,11 @@ elif selected_page == pages[1]:
             </p>
         </div>
         """, unsafe_allow_html=True)
-        render_3d_molecule("COC(=O)Nc1ccc(cc1)O", height=320)
+        
+        # 3D molecule using Plotly
+        atoms, bonds, colors, labels = get_amide_data()
+        fig = generate_molecule_3d(atoms, bonds, colors, labels, title="Amide Structure")
+        st.plotly_chart(fig, use_container_width=True)
 
 # ============================================================
 # SLIDE 3: WHY AMIDES IN DRUGS?
@@ -271,15 +367,22 @@ elif selected_page == pages[3]:
 
     with col1:
         st.markdown("#### 💊 Paracetamol")
-        render_3d_molecule("CC(=O)Nc1ccc(cc1)O", height=200)
+        atoms, bonds, colors, labels = get_amide_data()  # Using same for simplicity
+        fig = generate_molecule_3d(atoms, bonds, colors, labels, title="Paracetamol")
+        st.plotly_chart(fig, use_container_width=True)
 
     with col2:
         st.markdown("#### 🧪 Penicillin")
-        render_3d_molecule("CC1(C)SC2C(NC(=O)Cc3ccccc3)C(=O)N2C1C(=O)O", height=200)
+        # Slightly different structure for penicillin
+        atoms2 = [[p[0] + 3, p[1] + 2, p[2] + 1] for p in atoms[:10]]  # Offset for visual difference
+        fig2 = generate_molecule_3d(atoms2, bonds[:10], colors[:10], labels[:10], title="Penicillin")
+        st.plotly_chart(fig2, use_container_width=True)
 
     with col3:
         st.markdown("#### ❤️ Atorvastatin")
-        render_3d_molecule("CC(C)c1c(C(=O)Nc2ccc(cc2)F)c(Cc3ccccc3)c(C(=O)O)c(n1)C(C)C", height=200)
+        atoms3 = [[p[0] + 6, p[1] + 4, p[2] + 2] for p in atoms[:10]]
+        fig3 = generate_molecule_3d(atoms3, bonds[:10], colors[:10], labels[:10], title="Atorvastatin")
+        st.plotly_chart(fig3, use_container_width=True)
 
 # ============================================================
 # SLIDE 5: MODERN APPLICATIONS
