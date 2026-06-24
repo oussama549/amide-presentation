@@ -1,14 +1,15 @@
 import streamlit as st
 import plotly.graph_objects as go
-import numpy as np
-import pandas as pd
+from PIL import Image
+import requests
+from io import BytesIO
 
 # ============================================================
 # PAGE CONFIG
 # ============================================================
 st.set_page_config(
-    page_title="Vitamin B₂ | Analytical Chemistry SGD 2026",
-    page_icon="🧪",
+    page_title="Amide Formation | Drug Discovery",
+    page_icon="🧬",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -57,45 +58,33 @@ st.markdown("""
         margin: 1rem 0;
     }
     .highlight strong { color: #00ff88; }
-    .workflow {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 0.5rem 1rem;
-        padding: 1rem 0;
+    .drug-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 1rem 0;
     }
-    .workflow-step {
-        background: rgba(0, 255, 136, 0.05);
-        border: 1px solid rgba(0, 255, 136, 0.15);
-        border-radius: 40px;
-        padding: 0.6rem 1.8rem;
-        font-weight: 500;
-        color: #bbddff;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.6rem;
-        font-size: 0.95rem;
-    }
-    .workflow-arrow {
-        color: #00ff88;
-        font-size: 1.4rem;
-        opacity: 0.4;
-    }
-    .metric-box {
-        background: rgba(0, 0, 0, 0.3);
+    .drug-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
         border-radius: 16px;
-        padding: 1rem 1.5rem;
+        padding: 1rem;
         text-align: center;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        color: #c8d6e5;
+        transition: all 0.3s ease;
     }
-    .metric-box .value {
-        font-size: 2rem;
+    .drug-card:hover {
+        border-color: #00ff88;
+        transform: translateY(-3px);
+    }
+    .drug-card .name {
+        font-size: 1.2rem;
         font-weight: 700;
         color: #00ff88;
+        margin-bottom: 0.3rem;
     }
-    .metric-box .label {
-        font-size: 0.8rem;
+    .drug-card .use {
+        font-size: 0.85rem;
         color: #667799;
     }
     .footer {
@@ -113,17 +102,18 @@ st.markdown("""
 # ============================================================
 st.sidebar.markdown("""
 <div style="text-align:center; padding:1rem 0;">
-    <h3 style="color:#00ff88; -webkit-text-fill-color:#00ff88;">🧪 Vitamin B₂</h3>
-    <p style="color:#667799; font-size:0.8rem;">Analytical Chemistry SGD 2026</p>
+    <h3 style="color:#00ff88; -webkit-text-fill-color:#00ff88;">🧬 Amide Formation</h3>
+    <p style="color:#667799; font-size:0.8rem;">Drug Discovery Presentation</p>
 </div>
 """, unsafe_allow_html=True)
 
 pages = [
     "🏠 Title",
-    "📖 Background", 
-    "🔬 UV-Vis Spectroscopy",
-    "🧪 HPLC Chromatography",
-    "⚙️ Workflow & Team",
+    "📖 What is Amide Formation?",
+    "🔬 The Mechanism",
+    "💊 Why Amides in Drugs?",
+    "🧪 Real Drug Examples",
+    "🚀 Modern Applications",
     "📚 Conclusion"
 ]
 
@@ -137,399 +127,284 @@ if selected_page == pages[0]:
     with col2:
         st.markdown("""
         <div style="text-align:center; padding:3rem 0;">
-            <div style="font-size:4rem; margin-bottom:1rem;">🧪</div>
-            <h1 style="font-size:3.5rem;">Analytical Strategies for Vitamin B₂</h1>
-            <p class="subtitle" style="font-size:1.4rem;">Riboflavin · API &amp; Multivitamin Tablets</p>
+            <div style="font-size:4rem; margin-bottom:1rem;">🧬</div>
+            <h1 style="font-size:3.5rem;">The Amide Bond</h1>
+            <p class="subtitle" style="font-size:1.4rem;">The Unsung Hero of Modern Medicine</p>
             <p style="color:#667799; font-size:1.1rem; margin-top:1rem;">
-                📅 2026 AC II · SGD &nbsp;|&nbsp; 👥 Group X &nbsp;|&nbsp; ⏱ ≤ 8 min
+                Amide Formation in Organic Synthesis &amp; Drug Discovery
+            </p>
+            <p style="color:#445566; font-size:0.9rem; margin-top:1.5rem;">
+                <i class="fas fa-arrow-right"></i> Select a slide from the sidebar to begin
             </p>
         </div>
         """, unsafe_allow_html=True)
 
 # ============================================================
-# SLIDE 2: BACKGROUND
+# SLIDE 2: WHAT IS AMIDE FORMATION?
 # ============================================================
 elif selected_page == pages[1]:
-    st.markdown("<h1>1. Background</h1>", unsafe_allow_html=True)
-    st.markdown('<p class="subtitle">Why Vitamin B₂ (Riboflavin)?</p>', unsafe_allow_html=True)
-    
+    st.markdown("<h1>What is Amide Formation?</h1>", unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">The Chemical Bond That Connects Medicine</p>', unsafe_allow_html=True)
+
     col1, col2 = st.columns(2)
+
     with col1:
         st.markdown("""
         <div class="glass-card">
-            <h3>🔬 Key Facts</h3>
-            <p><strong>Vitamin B₂</strong> is water-soluble and essential for:</p>
-            <ul style="color:#c8d6e5; padding-left:1.2rem;">
-                <li>⚡ Energy metabolism</li>
-                <li>🧴 Skin &amp; mucosal health</li>
-                <li>🌱 Growth &amp; development</li>
-            </ul>
-            <p style="color:#8899bb; margin-top:0.8rem;">Found in animal organs, eggs, milk, green leafy vegetables.</p>
+            <h3>🔬 Simple Definition</h3>
+            <p>An <strong style="color:#00ff88;">amide</strong> is formed when a <strong style="color:#00ccff;">carboxylic acid</strong> reacts with an <strong style="color:#ff6b6b;">amine</strong>.</p>
+            <p style="margin-top:0.8rem; color:#8899bb; font-size:0.95rem;">
+                R-COOH + R'-NH₂ → R-CONH-R' + H₂O
+            </p>
         </div>
         """, unsafe_allow_html=True)
+
         st.markdown("""
-        <div class="highlight">
-            <strong>🎯 Goal:</strong> Sample, pretreat, separate, identify &amp; quantify Vitamin B₂ in API and complex multivitamin tablets.
+        <div class="glass-card">
+            <h3>💡 Why Is It Important?</h3>
+            <ul style="color:#c8d6e5; padding-left:1.2rem;">
+                <li>🧬 Found in <strong style="color:#00ff88;">>25% of FDA-approved drugs</strong></li>
+                <li>🔗 Forms the backbone of <strong style="color:#00ccff;">peptides and proteins</strong></li>
+                <li>💊 Used in <strong style="color:#ff6b6b;">drug discovery</strong> to create new medicines</li>
+            </ul>
         </div>
         """, unsafe_allow_html=True)
+
     with col2:
         st.markdown("""
         <div style="display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.2); border-radius:20px; border:1px solid rgba(255,255,255,0.05); text-align:center; padding:2rem; min-height:300px;">
             <div>
-                <div style="font-size:4rem; color:#00ff88;">💊</div>
-                <p style="color:#8899bb; font-size:1.1rem; margin-top:0.5rem;">API + Multivitamin Tablets</p>
-                <p style="color:#667799; font-size:0.85rem;">C₁₇H₂₀N₄O₆ · MW 376.36</p>
+                <div style="font-size:5rem; color:#00ff88;">🧬</div>
+                <p style="color:#8899bb; font-size:1.1rem; margin-top:0.5rem;">
+                    <strong style="color:#00ff88;">Amide Bond</strong>
+                </p>
+                <p style="color:#667799; font-size:0.85rem;">
+                    R-C(=O)-NHR'
+                </p>
+                <div style="margin-top:1rem; display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;">
+                    <span style="background:rgba(0,255,136,0.05); padding:0.2rem 1rem; border-radius:20px; border:1px solid rgba(0,255,136,0.1); font-size:0.75rem; color:#8899bb;">Stable</span>
+                    <span style="background:rgba(0,255,136,0.05); padding:0.2rem 1rem; border-radius:20px; border:1px solid rgba(0,255,136,0.1); font-size:0.75rem; color:#8899bb;">Bioavailable</span>
+                    <span style="background:rgba(0,255,136,0.05); padding:0.2rem 1rem; border-radius:20px; border:1px solid rgba(0,255,136,0.1); font-size:0.75rem; color:#8899bb;">Versatile</span>
+                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
 # ============================================================
-# SLIDE 3: UV-Vis SPECTROSCOPY (PLOTLY ANIMATION)
+# SLIDE 3: THE MECHANISM
 # ============================================================
 elif selected_page == pages[2]:
-    st.markdown("<h1>2. Task A – Spectroscopy</h1>", unsafe_allow_html=True)
-    st.markdown('<p class="subtitle">UV-Vis Spectrophotometry for API Identification</p>', unsafe_allow_html=True)
+    st.markdown("<h1>The Mechanism</h1>", unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">How Amides Are Formed</p>', unsafe_allow_html=True)
 
-    # --- Animation Controls ---
-    col1, col2, col3 = st.columns([1, 2, 1])
+    col1, col2 = st.columns(2)
+
     with col1:
-        st.markdown("**🎮 Controls**")
-        play_anim = st.button("▶️ Play Animation", use_container_width=True)
-        reset_anim = st.button("⏹️ Reset", use_container_width=True)
-
-    with col3:
-        st.markdown("**🎯 Manual**")
-        conc = st.slider("Concentration (µg/mL)", 0.0, 10.0, 5.0, 0.1)
-
-    # --- Animation State ---
-    if "frame_idx" not in st.session_state:
-        st.session_state.frame_idx = 0
-        st.session_state.playing = False
-
-    if play_anim:
-        st.session_state.playing = True
-        st.session_state.frame_idx = 0
-
-    if reset_anim:
-        st.session_state.playing = False
-        st.session_state.frame_idx = 0
-
-    # --- Generate frames for animation ---
-    frames = []
-    for i in range(0, 21):
-        c = i * 0.5
-        a = 0.0485 * c + 0.001
-        frames.append({
-            "conc": c,
-            "abs": a,
-            "label": f"{c:.1f} µg/mL"
-        })
-
-    # --- Update frame index if playing ---
-    if st.session_state.playing:
-        if st.session_state.frame_idx < len(frames) - 1:
-            st.session_state.frame_idx += 1
-        else:
-            st.session_state.playing = False
-
-    # --- Get current frame data ---
-    current_frame = frames[st.session_state.frame_idx]
-    current_conc = current_frame["conc"]
-    absorbance = current_frame["abs"]
-
-    # --- Create the Plot ---
-    fig = go.Figure()
-
-    # Full calibration curve (always visible)
-    x_calib = [0, 2, 4, 6, 8, 10]
-    y_calib = [0.000, 0.098, 0.195, 0.292, 0.388, 0.485]
-
-    fig.add_trace(go.Scatter(
-        x=x_calib,
-        y=y_calib,
-        mode='markers+lines',
-        name='Calibration Curve',
-        marker=dict(color='#00ff88', size=10, symbol='diamond'),
-        line=dict(color='#00ff88', width=3, dash='dot'),
-        hovertemplate='Conc: %{x:.1f} µg/mL<br>Abs: %{y:.3f}<extra></extra>'
-    ))
-
-    # Animated sample point (moving)
-    fig.add_trace(go.Scatter(
-        x=[current_conc],
-        y=[absorbance],
-        mode='markers',
-        name='Your Sample',
-        marker=dict(
-            color='#ff6b6b',
-            size=22,
-            symbol='star',
-            line=dict(color='white', width=2)
-        ),
-        hovertemplate='<b>Your Sample</b><br>Conc: %{x:.1f} µg/mL<br>Abs: %{y:.3f}<extra></extra>'
-    ))
-
-    # --- Animated Trace: The "Ghost" Path (trail) ---
-    if current_conc > 0:
-        x_trail = [0, current_conc]
-        y_trail = [0.001, absorbance]
-        fig.add_trace(go.Scatter(
-            x=x_trail,
-            y=y_trail,
-            mode='lines',
-            name='Path',
-            line=dict(color='rgba(255, 107, 107, 0.4)', width=3, dash='dash'),
-            showlegend=False
-        ))
-
-    fig.update_layout(
-        template='plotly_dark',
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        xaxis_title='Concentration (µg/mL)',
-        yaxis_title='Absorbance',
-        xaxis=dict(
-            gridcolor='rgba(255,255,255,0.03)',
-            range=[-0.5, 10.5],
-            zeroline=True,
-            zerolinecolor='rgba(255,255,255,0.1)'
-        ),
-        yaxis=dict(
-            gridcolor='rgba(255,255,255,0.03)',
-            range=[-0.02, 0.55],
-            zeroline=True,
-            zerolinecolor='rgba(255,255,255,0.1)'
-        ),
-        height=420,
-        margin=dict(l=50, r=30, t=30, b=50),
-        hovermode='closest'
-    )
-
-    # --- Display the chart ---
-    st.plotly_chart(fig, use_container_width=True, key="uvvis_chart")
-
-    # --- Metrics (with live updates) ---
-    col_a, col_b, col_c, col_d = st.columns(4)
-
-    with col_a:
-        st.markdown(f"""
-        <div class="metric-box">
-            <div class="value" style="color:#ff6b6b;">{current_conc:.1f}</div>
-            <div class="label">Concentration (µg/mL)</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col_b:
-        st.markdown(f"""
-        <div class="metric-box">
-            <div class="value" style="color:#00ff88;">{absorbance:.3f}</div>
-            <div class="label">Absorbance @ 444 nm</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col_c:
         st.markdown("""
-        <div class="metric-box">
-            <div class="value" style="color:#00ccff;">> 0.999</div>
-            <div class="label">R² Value</div>
+        <div class="glass-card">
+            <h3>⚡ Simple Mechanism</h3>
+            <p><strong style="color:#00ff88;">Step 1:</strong> Acid chloride + Amine</p>
+            <p style="color:#8899bb; font-size:0.95rem; padding-left:1rem;">
+                R-COCl + R'-NH₂ → R-CONH-R' + HCl
+            </p>
         </div>
         """, unsafe_allow_html=True)
 
-    with col_d:
         st.markdown("""
-        <div class="metric-box">
-            <div class="value" style="color:#ffd93d;">0.2 µg/mL</div>
-            <div class="label">LOD</div>
+        <div class="glass-card">
+            <h3>🔬 Key Points</h3>
+            <ul style="color:#c8d6e5; padding-left:1.2rem;">
+                <li>✅ <strong style="color:#00ff88;">Fast</strong> reaction</li>
+                <li>✅ <strong style="color:#00ccff;">High yield</strong></li>
+                <li>✅ <strong style="color:#ff6b6b;">Versatile</strong> — works with many substrates</li>
+                <li>⚠️ Requires <strong style="color:#ffd93d;">base</strong> to neutralize HCl</li>
+            </ul>
         </div>
         """, unsafe_allow_html=True)
 
-    # --- Status indicator ---
-    if st.session_state.playing:
-        progress = (st.session_state.frame_idx / (len(frames) - 1)) * 100
-        st.progress(progress / 100)
-        st.info(f"🎬 Animating... Frame {st.session_state.frame_idx + 1}/{len(frames)} | Concentration: {current_conc:.1f} µg/mL | Absorbance: {absorbance:.3f}")
-        # Auto-rerun for animation
-        import time
-        time.sleep(0.15)
-        st.rerun()
-    else:
-        if current_conc >= 10:
-            st.success("✅ Animation complete! The sample point has reached the top of the calibration curve.")
-        else:
-            st.info("💡 Click 'Play Animation' to watch the absorbance grow! Or use the slider to control it manually.")
-
-    # --- Explanation ---
-    with st.expander("📖 What's happening here?"):
+    with col2:
+        # Reaction mechanism visual (text-based)
         st.markdown("""
-        - **The green curve** is the Beer–Lambert calibration curve.
-        - **The red star** is your sample — it moves as concentration changes.
-        - **The dashed red line** shows the path from zero to the current point.
-        - **R² > 0.999** means the method is linear and accurate.
-        - **LOD = 0.2 µg/mL** is the lowest concentration you can detect.
-        """)
+        <div style="background:rgba(0,0,0,0.2); border-radius:20px; border:1px solid rgba(255,255,255,0.05); padding:2rem; text-align:center; min-height:300px; display:flex; flex-direction:column; justify-content:center;">
+            <div style="font-size:2.5rem; color:#00ff88; margin-bottom:0.5rem;">
+                R-COCl
+            </div>
+            <div style="font-size:2rem; color:#8899bb;">+</div>
+            <div style="font-size:2.5rem; color:#00ccff; margin-bottom:0.5rem;">
+                R'-NH₂
+            </div>
+            <div style="font-size:2rem; color:#ffd93d; margin:0.5rem 0;">⬇️</div>
+            <div style="font-size:2.5rem; color:#00ff88;">
+                R-CONH-R'
+            </div>
+            <div style="font-size:1.2rem; color:#667799; margin-top:0.5rem;">
+                <span style="color:#00ff88;">+</span> HCl
+            </div>
+            <div style="margin-top:1rem; display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;">
+                <span style="background:rgba(0,255,136,0.05); padding:0.2rem 1rem; border-radius:20px; border:1px solid rgba(0,255,136,0.1); font-size:0.75rem; color:#8899bb;">🔬 Acid Chloride</span>
+                <span style="background:rgba(0,255,136,0.05); padding:0.2rem 1rem; border-radius:20px; border:1px solid rgba(0,255,136,0.1); font-size:0.75rem; color:#8899bb;">🧪 Amine</span>
+                <span style="background:rgba(0,255,136,0.05); padding:0.2rem 1rem; border-radius:20px; border:1px solid rgba(0,255,136,0.1); font-size:0.75rem; color:#8899bb;">💊 Amide</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
 # ============================================================
-# SLIDE 4: HPLC CHROMATOGRAPHY
+# SLIDE 4: WHY AMIDES IN DRUGS?
 # ============================================================
 elif selected_page == pages[3]:
-    st.markdown("<h1>3. Task B – Chromatography</h1>", unsafe_allow_html=True)
-    st.markdown('<p class="subtitle">HPLC-UV for Multivitamin Tablets</p>', unsafe_allow_html=True)
-    
+    st.markdown("<h1>Why Amides in Drugs?</h1>", unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">The "Smart" Reason Behind Their Popularity</p>', unsafe_allow_html=True)
+
     col1, col2 = st.columns(2)
+
     with col1:
         st.markdown("""
         <div class="glass-card">
-            <h3>🧪 Sample Pretreatment</h3>
-            <ul style="color:#c8d6e5; padding-left:1.2rem;">
-                <li>Crush tablets in phosphate buffer (pH 6.8)</li>
-                <li>SPE (C18) for clean-up</li>
-                <li>0.45 µm filtration</li>
-            </ul>
+            <h3>✅ Stability</h3>
+            <p>Amide bonds are <strong style="color:#00ff88;">stable</strong> — they don't break easily in the body.</p>
+            <p style="color:#8899bb; font-size:0.9rem; margin-top:0.5rem;">This means drugs <strong>last longer</strong> in the body.</p>
         </div>
         """, unsafe_allow_html=True)
+
         st.markdown("""
         <div class="glass-card">
-            <h3>⚙️ HPLC Conditions</h3>
-            <ul style="color:#c8d6e5; padding-left:1.2rem;">
-                <li><strong>Column:</strong> C18 (150 × 4.6 mm, 5 µm)</li>
-                <li><strong>Mobile phase:</strong> Methanol : buffer (30:70), pH 6.8</li>
-                <li><strong>Flow:</strong> 1.0 mL/min · UV @ 444 nm</li>
-                <li><strong>Run time:</strong> 10 min</li>
-            </ul>
+            <h3>🧬 Bioavailability</h3>
+            <p>Amides can be designed to <strong style="color:#00ccff;">cross cell membranes</strong> and reach their targets.</p>
+            <p style="color:#8899bb; font-size:0.9rem; margin-top:0.5rem;">This means drugs <strong>work better</strong>.</p>
         </div>
         """, unsafe_allow_html=True)
-        st.markdown("""
-        <div class="highlight">
-            <strong>🧩 Matrix Interferences:</strong> Other vitamins (B1, B3, B6, B12) separated by retention time. SPE removes non-polar interferences.
-        </div>
-        """, unsafe_allow_html=True)
-    
+
     with col2:
-        st.markdown('<p style="color:#8899bb; font-size:0.9rem;">HPLC-UV chromatogram · Riboflavin @ ~5.2 min</p>', unsafe_allow_html=True)
-        time_vals = np.linspace(0, 10, 200)
-        signal = 0.02 + 0.9 * np.exp(-((time_vals - 5.2)**2) / 0.15) + 0.08 * np.exp(-((time_vals - 3.5)**2) / 0.5) + 0.05 * np.exp(-((time_vals - 7.0)**2) / 0.4)
-        
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=time_vals,
-            y=signal,
-            mode='lines',
-            name='Chromatogram',
-            line=dict(color='#00ccff', width=2.5)
-        ))
-        fig.add_vline(x=5.2, line_dash="dash", line_color="#00ff88", annotation_text="Vitamin B₂", annotation_position="top right")
-        fig.update_layout(
-            template='plotly_dark',
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            xaxis_title='Time (min)',
-            yaxis_title='Response (mAU)',
-            height=350,
-            margin=dict(l=40, r=20, t=40, b=40)
-        )
-        st.plotly_chart(fig, use_container_width=True)
-        
-        col_a, col_b, col_c = st.columns(3)
-        with col_a:
-            st.markdown("""
-            <div class="metric-box">
-                <div class="value">> 95%</div>
-                <div class="label">Recovery</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with col_b:
-            st.markdown("""
-            <div class="metric-box">
-                <div class="value">< 2%</div>
-                <div class="label">RSD</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with col_c:
-            st.markdown("""
-            <div class="metric-box">
-                <div class="value">5.2 min</div>
-                <div class="label">Retention Time</div>
-            </div>
-            """, unsafe_allow_html=True)
+        st.markdown("""
+        <div class="glass-card">
+            <h3>🔬 Versatility</h3>
+            <p>Amides can be <strong style="color:#ff6b6b;">tuned</strong> by changing the groups attached to them.</p>
+            <p style="color:#8899bb; font-size:0.9rem; margin-top:0.5rem;">This means chemists can <strong>design better drugs</strong>.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="glass-card">
+            <h3>💊 Drug Discovery</h3>
+            <p>Medicinal chemists use <strong style="color:#ffd93d;">amide coupling</strong> to create new drug candidates.</p>
+            <p style="color:#8899bb; font-size:0.9rem; margin-top:0.5rem;">This is <strong>one of the most common reactions</strong> in drug discovery.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # ============================================================
-# SLIDE 5: WORKFLOW & TEAM
+# SLIDE 5: REAL DRUG EXAMPLES
 # ============================================================
 elif selected_page == pages[4]:
-    st.markdown("<h1>4. Workflow &amp; Team</h1>", unsafe_allow_html=True)
-    st.markdown('<p class="subtitle">From Sample to Result</p>', unsafe_allow_html=True)
-    
+    st.markdown("<h1>Real Drug Examples</h1>", unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">Amide Bonds in Medicines You Know</p>', unsafe_allow_html=True)
+
     st.markdown("""
-    <div class="workflow">
-        <span class="workflow-step">🧪 Sample</span>
-        <span class="workflow-arrow">→</span>
-        <span class="workflow-step">🧹 SPE</span>
-        <span class="workflow-arrow">→</span>
-        <span class="workflow-step">🧫 Filtration</span>
-        <span class="workflow-arrow">→</span>
-        <span class="workflow-step">📊 HPLC</span>
-        <span class="workflow-arrow">→</span>
-        <span class="workflow-step" style="border-color:#00ff88;">✅ Result</span>
+    <div class="drug-grid">
+        <div class="drug-card">
+            <div class="name">💊 Paracetamol</div>
+            <div class="use">Painkiller · Fever reducer</div>
+            <p style="color:#667799; font-size:0.75rem; margin-top:0.3rem;">Contains an amide bond</p>
+        </div>
+        <div class="drug-card">
+            <div class="name">🧪 Penicillin</div>
+            <div class="use">Antibiotic</div>
+            <p style="color:#667799; font-size:0.75rem; margin-top:0.3rem;">Contains an amide bond</p>
+        </div>
+        <div class="drug-card">
+            <div class="name">❤️ Atorvastatin</div>
+            <div class="use">Cholesterol drug (Lipitor)</div>
+            <p style="color:#667799; font-size:0.75rem; margin-top:0.3rem;">Contains an amide bond</p>
+        </div>
+        <div class="drug-card">
+            <div class="name">🧬 Nirmatrelvir</div>
+            <div class="use">COVID-19 antiviral (Paxlovid)</div>
+            <p style="color:#667799; font-size:0.75rem; margin-top:0.3rem;">Contains an amide bond</p>
+        </div>
     </div>
     """, unsafe_allow_html=True)
-    
+
+    st.markdown("""
+    <div class="highlight">
+        <strong>📊 Did You Know?</strong> Over <strong style="color:#00ff88;">25%</strong> of all FDA-approved drugs contain an amide bond.
+    </div>
+    """, unsafe_allow_html=True)
+
+# ============================================================
+# SLIDE 6: MODERN APPLICATIONS
+# ============================================================
+elif selected_page == pages[5]:
+    st.markdown("<h1>Modern Applications</h1>", unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">How Amide Formation Is Used in Drug Discovery Today</p>', unsafe_allow_html=True)
+
     col1, col2 = st.columns(2)
+
     with col1:
         st.markdown("""
         <div class="glass-card">
-            <h3>👥 Team Roles</h3>
-            <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.5rem;">
-                <span style="background:rgba(0,255,136,0.05); padding:0.3rem 1.2rem; border-radius:30px; border:1px solid rgba(0,255,136,0.1); color:#c8d6e5; font-size:0.85rem;">🔬 Spectroscopy</span>
-                <span style="background:rgba(0,255,136,0.05); padding:0.3rem 1.2rem; border-radius:30px; border:1px solid rgba(0,255,136,0.1); color:#c8d6e5; font-size:0.85rem;">🧪 Chromatography</span>
-                <span style="background:rgba(0,255,136,0.05); padding:0.3rem 1.2rem; border-radius:30px; border:1px solid rgba(0,255,136,0.1); color:#c8d6e5; font-size:0.85rem;">📊 Data Analysis</span>
-                <span style="background:rgba(0,255,136,0.05); padding:0.3rem 1.2rem; border-radius:30px; border:1px solid rgba(0,255,136,0.1); color:#c8d6e5; font-size:0.85rem;">📋 Sample Prep</span>
-                <span style="background:rgba(0,255,136,0.05); padding:0.3rem 1.2rem; border-radius:30px; border:1px solid rgba(0,255,136,0.1); color:#c8d6e5; font-size:0.85rem;">🎤 Presentation</span>
-            </div>
+            <h3>🔬 Peptide Synthesis</h3>
+            <p>Amide formation is used to <strong style="color:#00ff88;">connect amino acids</strong> into peptides.</p>
+            <p style="color:#8899bb; font-size:0.9rem; margin-top:0.5rem;">Peptides are <strong style="color:#00ccff;">the future of medicine</strong> — they're more specific and have fewer side effects.</p>
         </div>
         """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="glass-card">
+            <h3>🧪 Drug Libraries</h3>
+            <p>Medicinal chemists use amide coupling to create <strong style="color:#ff6b6b;">thousands of drug candidates</strong> quickly.</p>
+            <p style="color:#8899bb; font-size:0.9rem; margin-top:0.5rem;">This is called <strong style="color:#ffd93d;">combinatorial chemistry</strong>.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
     with col2:
         st.markdown("""
         <div class="glass-card">
-            <h3>⭐ Evaluation</h3>
-            <ul style="color:#c8d6e5; padding-left:1.2rem; margin-top:0.2rem; font-size:0.95rem;">
-                <li><strong style="color:#00ff88;">40%</strong> Scientific rigor &amp; logic</li>
-                <li><strong style="color:#00ff88;">40%</strong> Method design (spectroscopy + chromatography)</li>
-                <li><strong style="color:#00ff88;">20%</strong> Teamwork &amp; individual contribution</li>
-            </ul>
-            <div class="highlight" style="margin-top:0.8rem;">
-                💡 <span style="color:#8899bb;">Active contribution → higher individual mark</span>
-            </div>
+            <h3>💊 Lead Optimization</h3>
+            <p>Once a promising compound is found, amide formation is used to <strong style="color:#00ccff;">modify it</strong> and make it better.</p>
+            <p style="color:#8899bb; font-size:0.9rem; margin-top:0.5rem;">This is how <strong style="color:#00ff88;">drugs get improved</strong>.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="glass-card">
+            <h3>🧬 Targeted Therapies</h3>
+            <p>Amide bonds are used to create <strong style="color:#ff6b6b;">targeted therapies</strong> — drugs that only attack cancer cells.</p>
+            <p style="color:#8899bb; font-size:0.9rem; margin-top:0.5rem;">This is the <strong style="color:#ffd93d;">future of medicine</strong>.</p>
         </div>
         """, unsafe_allow_html=True)
 
 # ============================================================
-# SLIDE 6: CONCLUSION
+# SLIDE 7: CONCLUSION
 # ============================================================
-elif selected_page == pages[5]:
-    st.markdown("<h1>5. Conclusion</h1>", unsafe_allow_html=True)
-    st.markdown('<p class="subtitle">Thank you for your attention!</p>', unsafe_allow_html=True)
-    
+elif selected_page == pages[6]:
+    st.markdown("<h1>Conclusion</h1>", unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">The Amide Bond — The Unsung Hero of Modern Medicine</p>', unsafe_allow_html=True)
+
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown("""
         <div class="glass-card">
-            <h3>📚 Key References</h3>
+            <h3>📌 Key Takeaways</h3>
             <ul style="color:#c8d6e5; padding-left:1.2rem;">
-                <li>USP-NF Monograph: Riboflavin</li>
-                <li>European Pharmacopoeia (Ph. Eur.) – Vitamin B₂</li>
-                <li>AOAC International – HPLC methods for vitamins</li>
-                <li>Skoog, D. A. et al. <em>Principles of Instrumental Analysis</em></li>
+                <li>🧬 The amide bond is <strong style="color:#00ff88;">one of the most important bonds</strong> in organic chemistry</li>
+                <li>💊 It is found in <strong style="color:#00ccff;">>25% of all drugs</strong></li>
+                <li>🔬 It is used in <strong style="color:#ff6b6b;">drug discovery</strong> to create new medicines</li>
+                <li>🧪 It is the foundation of <strong style="color:#ffd93d;">peptides and proteins</strong></li>
+                <li>🚀 It is the <strong style="color:#00ff88;">future of medicine</strong></li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
+
         st.markdown("""
-        <div class="highlight" style="font-size:1.1rem; padding:1.2rem 1.5rem;">
-            <strong>🧪 Take-home:</strong> UV-Vis + HPLC provide a robust analytical strategy for Vitamin B₂ in both API and complex matrices.
+        <div class="highlight" style="font-size:1.1rem; padding:1.2rem 1.5rem; text-align:center;">
+            <strong>🧪 The amide bond is not just a chemical bond —</strong><br>
+            <span style="color:#00ff88;">it's the connection between chemistry and medicine.</span>
         </div>
         """, unsafe_allow_html=True)
+
         st.markdown("""
         <div style="text-align:center; padding:1rem 0; color:#667799;">
-            <p>👥 Group X · 2026 AC II · SGD</p>
+            <p>🧬 Thank you for your attention</p>
+            <p style="font-size:0.85rem; color:#445566; margin-top:0.5rem;">Questions?</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -538,6 +413,6 @@ elif selected_page == pages[5]:
 # ============================================================
 st.markdown("""
 <div class="footer">
-    <p>🧪 Analytical Chemistry SGD 2026 · Group X</p>
+    <p>🧬 Amide Formation · Drug Discovery Presentation</p>
 </div>
 """, unsafe_allow_html=True)
