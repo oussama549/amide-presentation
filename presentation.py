@@ -93,6 +93,23 @@ st.markdown("""
         font-size: 0.85rem;
         color: #667799;
     }
+    .amide-structure {
+        font-family: 'Courier New', monospace;
+        color: #00ff88;
+        font-size: 1.1rem;
+        background: rgba(0,0,0,0.3);
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        text-align: center;
+        border: 1px solid rgba(0,255,136,0.1);
+        margin: 0.5rem 0;
+        line-height: 1.8;
+        letter-spacing: 0.5px;
+    }
+    .amide-structure .highlight-o { color: #ff6b6b; }
+    .amide-structure .highlight-n { color: #00ccff; }
+    .amide-structure .highlight-c { color: #ffd93d; }
+    .amide-structure .highlight-h { color: #ffffff; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -254,7 +271,7 @@ if selected_page == pages[0]:
         """, unsafe_allow_html=True)
 
 # ============================================================
-# SLIDE 2: WHAT IS AMIDE FORMATION?
+# SLIDE 2: WHAT IS AMIDE FORMATION? (MODIFIED)
 # ============================================================
 elif selected_page == pages[1]:
     st.markdown("<h1>What is Amide Formation?</h1>", unsafe_allow_html=True)
@@ -269,6 +286,26 @@ elif selected_page == pages[1]:
             <p>An <strong style="color:#00ff88;">amide</strong> is formed when a <strong style="color:#00ccff;">carboxylic acid</strong> reacts with an <strong style="color:#ff6b6b;">amine</strong>.</p>
             <p style="margin-top:0.8rem; color:#8899bb; font-size:0.95rem;">
                 R-COOH + R'-NH₂ → R-CONH-R' + H₂O
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # ===== AMIDE STRUCTURE DISPLAY =====
+        st.markdown("""
+        <div class="glass-card">
+            <h3>🧬 Amide Bond Structure</h3>
+            <div class="amide-structure">
+                <span style="color:#ffd93d;">R</span> — <span style="color:#ff6b6b;">C</span> <span style="color:#ff6b6b;">=</span> <span style="color:#ff6b6b;">O</span><br>
+                <span style="padding-left:1.8rem;">|</span><br>
+                <span style="padding-left:1.5rem; color:#00ccff;">N</span> — <span style="color:#ffffff;">H</span><br>
+                <span style="padding-left:1.5rem;">|</span><br>
+                <span style="padding-left:1.2rem; color:#ffd93d;">R'</span>
+            </div>
+            <p style="color:#8899bb; font-size:0.85rem; margin-top:0.3rem; text-align:center;">
+                <span style="color:#ff6b6b;">●</span> Carbonyl carbon (C=O) &nbsp;·&nbsp;
+                <span style="color:#00ccff;">●</span> Nitrogen (N) &nbsp;·&nbsp;
+                <span style="color:#ffd93d;">●</span> Carbon (C) &nbsp;·&nbsp;
+                <span style="color:#ffffff;">●</span> Hydrogen (H)
             </p>
         </div>
         """, unsafe_allow_html=True)
