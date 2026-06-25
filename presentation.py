@@ -287,35 +287,15 @@ elif selected_page == pages[1]:
     <p style="margin-top:0.8rem; color:#8899bb; font-size:0.95rem;">
         R-COOH + R'-NH₂ → R-CONH-R' + H₂O
     </p>
-    <div style="margin-top:1rem; padding:0.8rem; background:rgba(0,0,0,0.3); border-radius:12px; text-align:center; font-family:'Courier New',monospace; font-size:1rem; color:#00ff88; border:1px solid rgba(0,255,136,0.1);">
-        <span style="color:#ffd93d;">R</span> — <span style="color:#ff6b6b;">C</span> = <span style="color:#ff6b6b;">O</span><br>
+        <div style="margin-top:1rem; padding:0.8rem; background:rgba(0,0,0,0.3); border-radius:12px; text-align:center; font-family:'Courier New',monospace; font-size:1rem; color:#00ff88; border:1px solid rgba(0,255,136,0.1);">
+        <span style="color:#ffd93d;">R</span> &#8212; <span style="color:#ff6b6b;">C</span> = <span style="color:#ff6b6b;">O</span><br>
         <span style="padding-left:1.8rem;">|</span><br>
-        <span style="padding-left:1.5rem; color:#00ccff;">N</span> — <span style="color:#ffffff;">H</span><br>
+        <span style="padding-left:1.5rem; color:#00ccff;">N</span> &#8212; <span style="color:#ffffff;">H</span><br>
         <span style="padding-left:1.5rem;">|</span><br>
         <span style="padding-left:1.2rem; color:#ffd93d;">R'</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
-
-        # ===== AMIDE STRUCTURE DISPLAY =====
-        st.markdown("""
-        <div class="glass-card">
-            <h3>🧬 Amide Bond Structure</h3>
-            <div class="amide-structure">
-                <span style="color:#ffd93d;">R</span> — <span style="color:#ff6b6b;">C</span> <span style="color:#ff6b6b;">=</span> <span style="color:#ff6b6b;">O</span><br>
-                <span style="padding-left:1.8rem;">|</span><br>
-                <span style="padding-left:1.5rem; color:#00ccff;">N</span> — <span style="color:#ffffff;">H</span><br>
-                <span style="padding-left:1.5rem;">|</span><br>
-                <span style="padding-left:1.2rem; color:#ffd93d;">R'</span>
-            </div>
-            <p style="color:#8899bb; font-size:0.85rem; margin-top:0.3rem; text-align:center;">
-                <span style="color:#ff6b6b;">●</span> Carbonyl carbon (C=O) &nbsp;·&nbsp;
-                <span style="color:#00ccff;">●</span> Nitrogen (N) &nbsp;·&nbsp;
-                <span style="color:#ffd93d;">●</span> Carbon (C) &nbsp;·&nbsp;
-                <span style="color:#ffffff;">●</span> Hydrogen (H)
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
 
         st.markdown("""
         <div class="glass-card">
