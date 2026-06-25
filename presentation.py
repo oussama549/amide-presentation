@@ -280,15 +280,22 @@ elif selected_page == pages[1]:
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown("""
-        <div class="glass-card">
-            <h3>🔬 Simple Definition</h3>
-            <p>An <strong style="color:#00ff88;">amide</strong> is formed when a <strong style="color:#00ccff;">carboxylic acid</strong> reacts with an <strong style="color:#ff6b6b;">amine</strong>.</p>
-            <p style="margin-top:0.8rem; color:#8899bb; font-size:0.95rem;">
-                R-COOH + R'-NH₂ → R-CONH-R' + H₂O
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+<div class="glass-card">
+    <h3>🔬 Simple Definition</h3>
+    <p>An <strong style="color:#00ff88;">amide</strong> is formed when a <strong style="color:#00ccff;">carboxylic acid</strong> reacts with an <strong style="color:#ff6b6b;">amine</strong>.</p>
+    <p style="margin-top:0.8rem; color:#8899bb; font-size:0.95rem;">
+        R-COOH + R'-NH₂ → R-CONH-R' + H₂O
+    </p>
+    <div style="margin-top:1rem; padding:0.8rem; background:rgba(0,0,0,0.3); border-radius:12px; text-align:center; font-family:'Courier New',monospace; font-size:1rem; color:#00ff88; border:1px solid rgba(0,255,136,0.1);">
+        <span style="color:#ffd93d;">R</span> — <span style="color:#ff6b6b;">C</span> = <span style="color:#ff6b6b;">O</span><br>
+        <span style="padding-left:1.8rem;">|</span><br>
+        <span style="padding-left:1.5rem; color:#00ccff;">N</span> — <span style="color:#ffffff;">H</span><br>
+        <span style="padding-left:1.5rem;">|</span><br>
+        <span style="padding-left:1.2rem; color:#ffd93d;">R'</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
         # ===== AMIDE STRUCTURE DISPLAY =====
         st.markdown("""
