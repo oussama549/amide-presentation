@@ -271,8 +271,7 @@ if selected_page == pages[0]:
         """, unsafe_allow_html=True)
 
 # ============================================================
-# ============================================================
-# SLIDE 2: WHAT IS AMIDE FORMATION? (GUARANTEED WORKING)
+# SLIDE 2: WHAT IS AMIDE FORMATION? (GUARANTEED)
 # ============================================================
 elif selected_page == pages[1]:
     st.markdown("<h1>What is Amide Formation?</h1>", unsafe_allow_html=True)
@@ -291,23 +290,28 @@ elif selected_page == pages[1]:
         </div>
         """, unsafe_allow_html=True)
 
-        # ===== AMIDE STRUCTURE USING UNICODE =====
+        # ===== AMIDE STRUCTURE USING ST.CODE (GUARANTEED) =====
         st.markdown("""
         <div class="glass-card">
             <h3>🧬 Amide Bond Structure</h3>
-            <pre style="background:rgba(0,0,0,0.3); border-radius:12px; padding:1rem; text-align:center; font-family:'Courier New',monospace; font-size:1.1rem; color:#00ff88; border:1px solid rgba(0,255,136,0.1); line-height:2;">
-        <span style="color:#ffd93d;">R</span> — <span style="color:#ff6b6b;">C</span> = <span style="color:#ff6b6b;">O</span>
-               |
-        <span style="color:#00ccff;">N</span> — <span style="color:#ffffff;">H</span>
-               |
-        <span style="color:#ffd93d;">R'</span>
-            </pre>
-            <p style="color:#8899bb; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
-                <span style="color:#ff6b6b;">●</span> Carbonyl carbon (C=O) &nbsp;·&nbsp;
-                <span style="color:#00ccff;">●</span> Nitrogen (N) &nbsp;·&nbsp;
-                <span style="color:#ffd93d;">●</span> Carbon (C) &nbsp;·&nbsp;
-                <span style="color:#ffffff;">●</span> Hydrogen (H)
-            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # This is the structure using st.code() — it ALWAYS works
+        st.code("""
+        R — C = O
+             |
+        N — H
+             |
+        R'
+        """, language="text")
+
+        st.markdown("""
+        <div style="color:#8899bb; font-size:0.85rem; text-align:center; margin-top:-0.5rem; padding-bottom:1rem;">
+            <span style="color:#ff6b6b;">●</span> Carbonyl carbon (C=O) &nbsp;·&nbsp;
+            <span style="color:#00ccff;">●</span> Nitrogen (N) &nbsp;·&nbsp;
+            <span style="color:#ffd93d;">●</span> Carbon (C) &nbsp;·&nbsp;
+            <span style="color:#ffffff;">●</span> Hydrogen (H)
         </div>
         """, unsafe_allow_html=True)
 
